@@ -1,4 +1,7 @@
-﻿using HR_Program.Models;
+﻿using HR_Program.Domain.DTO;
+using HR_Program.Domain.Interfaces;
+using HR_Program.Domain.Repositories;
+using HR_Program.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,13 +16,16 @@ namespace HR_Program.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
+
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+
         }
 
         public IActionResult Index()
         {
+
             return View();
         }
 
@@ -32,6 +38,32 @@ namespace HR_Program.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Register(int model)
+        {
+
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(int model)
+        {
+
+            return View();
         }
     }
 }

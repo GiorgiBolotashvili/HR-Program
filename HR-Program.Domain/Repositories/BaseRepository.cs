@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace HR_Program.Repository
+namespace HR_Program.Domain.Repositories
 {
     public class BaseRepository
     {
-        protected readonly string connectionString = "Server = .\\SQLEXPRESS; Database = MedsoftDT; integrated security = true;";
+        protected readonly string connectionString = "Server = .\\SQLEXPRESS; Database = HR; integrated security = true;";
 
-        public DataTable GetAllObjects<T>(T type)
+        public DataTable GetFromView<T>(T type)
         {
             DataTable dataTable = new DataTable();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = $"Exec SelectAll{type.GetType().Name}_sp";
+                string query = $"Select * From {type.GetType().Name}View";
                 SqlCommand command = new SqlCommand(query, con);
                 if (command.Connection.State != ConnectionState.Open)
                     command.Connection.Open();
@@ -26,7 +27,7 @@ namespace HR_Program.Repository
             return dataTable;
         }
 
-        public void InserUpdate<T>(T type, params SqlParameter[] parameters)
+        public void InsertUpdate<T>(T type, params SqlParameter[] parameters)
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
@@ -44,8 +45,9 @@ namespace HR_Program.Repository
             }
         }
 
-        public void Delete<T>(T type, int id)
+        public bool Delete<T>(T type, int id)
         {
+            bool response;
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 SqlCommand command = con.CreateCommand();
@@ -55,8 +57,10 @@ namespace HR_Program.Repository
                 if (command.Connection.State != ConnectionState.Open)
                     command.Connection.Open();
 
-                command.ExecuteScalar();
+               response = Convert.ToBoolean( command.ExecuteScalar());
             }
+
+            return response;
         }
 
         //public string FormatPhoneNUmber(string number)
@@ -72,5 +76,4 @@ namespace HR_Program.Repository
         //    return string.Join("-", arr);
         //}
     }
-
 }
