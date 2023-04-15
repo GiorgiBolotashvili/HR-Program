@@ -19,6 +19,8 @@ namespace HR_Program.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+
+
             EmployeeRepository employee = new EmployeeRepository();
 
             var response = employee.GetFromView(new Employee());
@@ -26,7 +28,7 @@ namespace HR_Program.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(int model) {
+        public IActionResult Register(User model) {
 
             return View();
         }

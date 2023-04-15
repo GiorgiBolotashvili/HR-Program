@@ -14,7 +14,13 @@ namespace HR_Program.Domain.Repositories
     {
         public bool Create(Employee model)
         {
+            int id = model.IdEmployee == null ? 0 : model.IdEmployee;
+
             InsertUpdate(new Employee(), new SqlParameter()
+            {
+                ParameterName = "@IdEmployee",
+                Value = id
+            }, new SqlParameter()
             {
                 ParameterName = "@FirstName",
                 Value = model.FirstName

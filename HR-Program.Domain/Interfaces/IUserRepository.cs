@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HR_Program.Domain.Interfaces
 {
-    interface IUserRepository : IBaseRepository<Employee>
+    interface IUserRepository : IBaseRepository<User>
     {
     }
 }

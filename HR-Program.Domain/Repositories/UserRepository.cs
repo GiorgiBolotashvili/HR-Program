@@ -2,32 +2,93 @@
 using HR_Program.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HR_Program.Domain.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
-        public bool Create(Employee model)
+        public bool Create(User model)
+        {
+            int id = model.IdUser == null ? 0 : model.IdUser;
+            try
+            {
+                InsertUpdate(new User(), new SqlParameter()
+                {
+                    ParameterName = "@IdUser",
+                    Value = id
+                }, new SqlParameter()
+                {
+                    ParameterName = "@FirstName",
+                    Value = model.FirstName
+                }, new SqlParameter()
+                {
+                    ParameterName = "@LastName",
+                    Value = model.LastName
+                }, new SqlParameter()
+                {
+                    ParameterName = "@PersonalNumber",
+                    Value = model.PersonalNumber
+                }, new SqlParameter()
+                {
+                    ParameterName = "@Gender",
+                    Value = model.Gender
+                }, new SqlParameter()
+                {
+                    ParameterName = "@DateOfBirth",
+                    Value = model.DateOfBirth
+                }, new SqlParameter()
+                {
+                    ParameterName = "@Email",
+                    Value = model.Email
+                }, new SqlParameter()
+                {
+                    ParameterName = "@Password",
+                    Value = model.Password
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return true;
+        }
+
+        public bool Delete(User model)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(Employee model)
+        public User Get(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Employee Get(int id)
+        public IEnumerable<User> Select()
         {
-            throw new NotImplementedException();
-        }
+            DataTable myTable = GetFromView(new User());
+            List<User> employeeList = new List<User>();
 
-        public IEnumerable<Employee> Select()
-        {
-            throw new NotImplementedException();
+            foreach (DataRow row in myTable.Rows)
+            {
+                User user = new User()
+                {
+                    IdUser = Convert.ToInt32(row["IdUser"]),
+                    PersonalNumber = row["PersonalNumber"].ToString(),
+                    FirstName = row["FirstName"].ToString(),
+                    LastName = row["LastName"].ToString(),
+                    Gender = row["Gender"].ToString(),
+                    DateOfBirth = Convert.ToDateTime(row["DateOfBirth"]),
+                    Email = row["Email"].ToString()
+                };
+                employeeList.Add(user);
+            }
+
+            return employeeList;
         }
     }
 }
