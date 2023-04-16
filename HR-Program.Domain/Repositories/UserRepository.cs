@@ -83,7 +83,8 @@ namespace HR_Program.Domain.Repositories
                     LastName = row["LastName"].ToString(),
                     Gender = row["Gender"].ToString(),
                     DateOfBirth = Convert.ToDateTime(row["DateOfBirth"]),
-                    Email = row["Email"].ToString()
+                    Email = row["Email"].ToString(),
+                    Password = row["Password"].ToString()
                 };
                 employeeList.Add(user);
             }

@@ -17,22 +17,19 @@ namespace HR_Program.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly UserRepository _userRepository;
-        private readonly EmployeeRepository _employeeRepository;
-
 
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
             _userRepository = new UserRepository();
-            _employeeRepository = new EmployeeRepository();
         }
 
         public IActionResult Index()
         {
             if (UserHelper.isLogIn)
             {
-                return RedirectToAction("GetEmployees", "Home");
+                return RedirectToAction("GetEmployees", "Employee");
             }
             else
             {
@@ -40,16 +37,11 @@ namespace HR_Program.Controllers
             }
         }
 
-        public ActionResult GetEmployees()
-        {
-             return View(_employeeRepository.Select());
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+/*        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        }*/
 
 
         public IActionResult Registration()
@@ -78,18 +70,13 @@ namespace HR_Program.Controllers
 
             if (_userRepository.Create(model))
             {
-                UserHelper.activeUser = model.Email;
+                UserHelper.activeUser = model;
                 UserHelper.isLogIn = true;
                 return RedirectToAction("GetEmployees", "Home");
             }
             
             return View(model);
 
-        }
-
-        private bool checkEmail(string email)
-        {
-            return _userRepository.Select().Where(x => x.Email == email).Any();
         }
 
         [HttpGet]
@@ -99,10 +86,34 @@ namespace HR_Program.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(int model)
+        public IActionResult Login(User model)
         {
+            User logInUser = _userRepository.Select().FirstOrDefault(x => x.Email == model.Email);
+            if (logInUser==null)
+            {
+                TempData["Message"] = "This email is not registered in the system";
+                return RedirectToAction("Login", "Home");
+            }
+            else if (logInUser.Password != HashPasswordHelper.HashPassword(model.Password))
+            {
+                TempData["Message"] = "Password is wrong. Try again.";
+                return RedirectToAction("Login", "Home");
+            }
+            UserHelper.activeUser = logInUser;
+            UserHelper.isLogIn = true;
+            return RedirectToAction("GetEmployees", "Employee");
+        }
 
-            return View();
+        public IActionResult LogOut()
+        {
+            UserHelper.activeUser = null;
+            UserHelper.isLogIn = false;
+            return RedirectToAction("Login", "Home");
+        }
+
+        private bool checkEmail(string email)
+        {
+            return _userRepository.Select().Where(x => x.Email == email).Any();
         }
     }
 }

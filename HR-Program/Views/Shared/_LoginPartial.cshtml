@@ -1,0 +1,16 @@
+﻿@if (UserHelper.isLogIn)
+{
+    <form asp-controller="Home" asp-action="LogOut" method="post">
+        @Html.AntiForgeryToken()
+        <div class="d-inline-block">
+            <h4>Welcome @UserHelper.activeUser.FirstName.ToString()</h4>
+            <button type="submit" class="btn btn-link">Logout</button>
+        </div>
+    </form>
+}
+else
+{
+    <div>
+        <a asp-controller="Home" asp-action="Login" class="float-right">Login</a>
+    </div>
+}
