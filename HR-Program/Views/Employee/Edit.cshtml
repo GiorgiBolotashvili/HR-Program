@@ -1,16 +1,15 @@
 ﻿@model Employee
 
-@{ ViewData["Title"] = "Create Employee"; }
-<h2>Create Employee</h2>
+<h2>Edit Employee</h2>
 @if (TempData["Message"] != null)
 {
 <script>alert("@TempData["Message"]");</script>
 }
 
-<form asp-action="Create" asp-controller="Employee" method="post">
+<form asp-controller="Employee" asp-action="Edit" method="post">
     <div class="form-group">
-        <label asp-for="PersonalNumber">Personal Number:</label>
-        <input asp-for="PersonalNumber" class="form-control">
+        <label asp-for="PersonalNumber">Personal Number</label>
+        <input asp-for="PersonalNumber" class="form-control" />
         @Html.ValidationMessageFor(model => model.PersonalNumber, "", new { @class = "text-danger" })
     </div>
     <div class="form-group">
@@ -61,6 +60,6 @@
         <label asp-for="LeaveDate">Leave Date:</label>
         @Html.ValidationMessageFor(model => model.LeaveDate, "", new { @class = "text-danger" })
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-    <button type="button" class="btn btn-secondary" onclick="hideCreateEmployeeForm()">Cancel</button>
+    <input type="hidden" asp-for="IdEmployee" />
+    <button type="submit" class="btn btn-primary">Save</button>
 </form>

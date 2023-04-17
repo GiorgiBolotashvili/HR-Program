@@ -45,22 +45,19 @@ namespace HR_Program.Domain.Repositories
             }
         }
 
-        public bool Delete<T>(T type, int id)
+        public void  Delete<T>(T type, int id)
         {
-            bool response;
+
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 SqlCommand command = con.CreateCommand();
-                command.CommandText = $"Delete{type.GetType().Name}_sp";
-                command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter { ParameterName = "@ID", Value = id });
+                command.CommandText = $"UPDATE  {type.GetType().Name} SET IsDeleted = {1} Where Id{type.GetType().Name}={id}";
+                command.CommandType = CommandType.Text;
                 if (command.Connection.State != ConnectionState.Open)
                     command.Connection.Open();
 
-               response = Convert.ToBoolean( command.ExecuteScalar());
+               Convert.ToBoolean( command.ExecuteScalar());
             }
-
-            return response;
         }
 
         //public string FormatPhoneNUmber(string number)

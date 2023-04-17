@@ -1,4 +1,4 @@
-﻿@model HR_Program.Domain.DTO.User
+﻿@model User
 @{    ViewData["Title"] = "Registration"; }
 
 <section class="vh-100" style="background-color: #eee;">
@@ -60,6 +60,7 @@
                                                 Female
                                             </label>
                                         </div>
+                                        @Html.ValidationMessageFor(model => model.Gender, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <div class="input-group date" id="datetimepicker2" data-target-input="nearest">

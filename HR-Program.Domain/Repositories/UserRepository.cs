@@ -14,13 +14,12 @@ namespace HR_Program.Domain.Repositories
     {
         public bool Create(User model)
         {
-            int id = model.IdUser == null ? 0 : model.IdUser;
             try
             {
                 InsertUpdate(new User(), new SqlParameter()
                 {
                     ParameterName = "@IdUser",
-                    Value = id
+                    Value = model.IdUser
                 }, new SqlParameter()
                 {
                     ParameterName = "@FirstName",
@@ -58,7 +57,7 @@ namespace HR_Program.Domain.Repositories
             return true;
         }
 
-        public bool Delete(User model)
+        public bool Delete(int id)
         {
             throw new NotImplementedException();
         }
@@ -90,6 +89,11 @@ namespace HR_Program.Domain.Repositories
             }
 
             return employeeList;
+        }
+
+        public bool Update(User model)
+        {
+            return Create(model);
         }
     }
 }

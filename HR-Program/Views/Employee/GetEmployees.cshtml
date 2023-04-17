@@ -1,13 +1,29 @@
 ﻿@{ ViewData["Title"] = "Employees"; }
-@model List<Employee>
+@model EmployeeListViewModel
 
 <h2>Employee List</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Add New Employee", "Create")
 </p>
 
-<table class="table">
+
+@using (Html.BeginForm("GetEmployees", "Employee", Model.RowsPerPage,  FormMethod.Get))
+{
+<div class="form-group float-left">
+    <label for="search">Search:</label>
+    <input type="text" name="searchString" class="form-control" id="search" placeholder="Enter search term">
+    <button type="submit" class="btn btn-primary">Search</button>
+</div>
+
+<div class="form-group float-right">
+    <label for="rowsPerPage">Rows per page:</label>
+    <input type="number" id="rowsPerPage" name="rowsPerPage">
+</div>
+}
+
+
+<table class="table" id="employee-table">
     <thead>
         <tr>
             <th>Personal Number</th>
@@ -22,22 +38,37 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var employee in Model)
+        @foreach (var employee in Model.Employees)
         {
-            <tr>
-                <td>@employee.PersonalNumber</td>
-                <td>@employee.FirstName</td>
-                <td>@employee.LastName</td>
-                <td>@employee.Gender</td>
-                <td>@employee.DateOfBirth</td>
-                <td>@employee.Phone</td>
-                <td>@employee.Status</td>
-                <td>@employee.LeaveDate</td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = employee.IdEmployee }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = employee.IdEmployee }, new { onclick = "return confirm('Are you sure you want to delete this employee?');" })
-                </td>
-            </tr>
-        }
+<tr>
+    <td>@employee.PersonalNumber</td>
+    <td>@employee.FirstName</td>
+    <td>@employee.LastName</td>
+    <td>@employee.Gender</td>
+    <td>@employee.DateOfBirth.ToString("yyyy-MM-dd")</td>
+    <td>@employee.Phone</td>
+    <td>@employee.Status</td>
+    <td>@employee.LeaveDate?.ToString("yyyy-MM-dd")</td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = employee.IdEmployee }) |
+        @Html.ActionLink("Delete", "Delete", new { id = employee.IdEmployee }, new { onclick = "return confirm('Are you sure you want to delete this employee?');" })
+    </td>
+</tr>
+}
     </tbody>
 </table>
+
+<div class="pagination">
+    @if (Model.Page > 1)
+    {
+        <a href="?searchString=@Model.SearchString&amp;page=@(Model.Page - 1)&amp;rowsPerPage=@Model.RowsPerPage">Previous</a>
+    }
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <a href="?searchString=@Model.SearchString&amp;page=@i&amp;rowsPerPage=@Model.RowsPerPage" @(i == Model.Page ? "class=current-page" : "")>@i</a>
+    }
+    @if (Model.Page < Model.TotalPages)
+    {
+        <a href="?searchString=@Model.SearchString&amp;page=@(Model.Page + 1)&amp;rowsPerPage=@Model.RowsPerPage">Next</a>
+    }
+</div>

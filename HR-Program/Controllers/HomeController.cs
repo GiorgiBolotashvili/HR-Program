@@ -57,10 +57,14 @@ namespace HR_Program.Controllers
             {
                 return View(model);
             }
-
-            if (checkEmail(model.Email))
+            else if (checkEmail(model.Email))
             {
                 TempData["Message"] = "This email is already registered. Please log in";
+                return RedirectToAction("Login", "Home");
+            }
+            else if (checkPersonalNumber(model.PersonalNumber))
+            {
+                TempData["Message"] = "This PersonalNumber is already registered. Please log in";
                 return RedirectToAction("Login", "Home");
             }
             else
@@ -72,7 +76,7 @@ namespace HR_Program.Controllers
             {
                 UserHelper.activeUser = model;
                 UserHelper.isLogIn = true;
-                return RedirectToAction("GetEmployees", "Home");
+                return RedirectToAction("GetEmployees", "Employee");
             }
             
             return View(model);
@@ -114,6 +118,10 @@ namespace HR_Program.Controllers
         private bool checkEmail(string email)
         {
             return _userRepository.Select().Where(x => x.Email == email).Any();
+        }
+        private bool checkPersonalNumber(string personalNumber)
+        {
+            return _userRepository.Select().Where(x => x.PersonalNumber == personalNumber).Any();
         }
     }
 }
