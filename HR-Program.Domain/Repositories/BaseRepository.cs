@@ -10,7 +10,7 @@ namespace HR_Program.Domain.Repositories
 {
     public class BaseRepository
     {
-        protected readonly string connectionString = "Server = .\\SQLEXPRESS; Database = HR; integrated security = true;";
+        protected readonly string connectionString = "Server = .; Database = HR; integrated security = true;";
 
         public DataTable GetFromView<T>(T type)
         {
